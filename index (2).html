@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP Registration System</title>
+    <style>
+        body {
+            color: black;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+            transition: background-color 0.5s;
+        }
+
+        .color-button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        body {
+            background-color: black;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            width: 350px;
+            margin: 100px auto;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .records-container {
+            display: none;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-size: 24px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+            input:focus {
+                border-color: #3498db;
+                outline: none;
+            }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+            button:hover {
+                background-color: #2980b9;
+            }
+
+        .admin-btn {
+            background: none;
+            border: none;
+            color: #7f8c8d;
+            margin-top: 15px;
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 14px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(3px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 25px;
+            border-radius: 10px;
+            width: 350px;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .logout-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+            .logout-btn:hover {
+                background-color: #c0392b;
+            }
+
+        #ip-list {
+            background: white;
+            border-radius: 10px;
+            padding: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .ip-entry {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+
+            .ip-entry:hover {
+                background-color: #f9f9f9;
+            }
+
+            .ip-entry:last-child {
+                border-bottom: none;
+            }
+
+        .ip-info {
+            flex: 1;
+        }
+
+        .ip-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .delete-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: background-color 0.3s;
+        }
+
+            .delete-btn:hover {
+                background-color: #c0392b;
+            }
+
+        .timestamp {
+            color: #7f8c8d;
+            font-size: 13px;
+            margin-top: 3px;
+        }
+
+        .status-message {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+        }
+
+        .no-records {
+            text-align: center;
+            padding: 30px;
+            color: #7f8c8d;
+        }
+
+        @media (max-width: 768px) {
+            .login-container, .modal-content {
+                width: 90%;
+                margin: 20px auto;
+            }
+
+            .records-container {
+                padding: 15px;
+            }
+
+            .ip-entry {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .ip-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+</head>
+<body>
+    <a href="#" class="color-button" style="background-color: #333333;" onclick="changeBgColor('#333333')"></a>
+    <a href="#" class="color-button" style="background-color: white;" onclick="changeBgColor('#ffffff')"></a>
+    <a href="turkish.html" class="text-black color-button">Turkish</a>
+    
+    <!-- Login Page -->
+    <div class="container">
+        <div class="login-container" id="login-container">
+            <h1>IP Registration System</h1>
+            <form id="user-form">
+                <input type="text" id="username" placeholder="Username" required>
+                <button type="submit">Login</button>
+            </form>
+            <button id="admin-btn" class="admin-btn">Admin Login</button>
+            <div id="status" class="status-message"></div>
+        </div>
+
+        <!-- Records Page -->
+        <div class="records-container" id="records-container">
+            <div class="header">
+                <h1 id="page-title">Records List</h1>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+
+            <div id="ip-list">
+                <div id="ip-entries" class="loading">Loading...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div id="adminModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Admin Login</h2>
+            <form id="admin-form">
+                <input type="password" id="admin-password" placeholder="Admin Password" required>
+                <button type="submit">Login</button>
+            </form>
+            <div id="admin-status" class="status-message"></div>
+        </div>
+    </div>
+
+    <script>
+    // Configuration
+        const ADMIN_PASSWORD = "4642";
+        const JSON_BIN_ID = "68850db0ae596e708fbc2724";
+        const API_KEY = "$2a$10$ElT2u5UuqrvUqt2e5dCfoOoikiRv.6Cm.LQFiQrsO.9in96rcBp0u";
+        const JSON_BIN_URL = `https://api.jsonbin.io/v3/b/${JSON_BIN_ID}`;
+
+        // DOM Elements
+        const loginContainer = document.getElementById("login-container");
+        const recordsContainer = document.getElementById("records-container");
+        const modal = document.getElementById("adminModal");
+        const adminBtn = document.getElementById("admin-btn");
+        const closeBtn = document.querySelector(".close");
+        const statusDiv = document.getElementById("status");
+        const adminStatusDiv = document.getElementById("admin-status");
+        const ipEntries = document.getElementById("ip-entries");
+
+        // State variables
+        let currentRecords = [];
+
+        // Initialize the application
+        function initApp() {
+            const userType = sessionStorage.getItem("userType");
+
+            if (userType) {
+                showRecordsPage();
+                loadRecords();
+            } else {
+                loginContainer.style.display = "block";
+            }
+        }
+
+        // Show records page
+        function showRecordsPage() {
+            loginContainer.style.display = "none";
+            recordsContainer.style.display = "block";
+
+            if (sessionStorage.getItem("userType") === "admin") {
+                document.getElementById("page-title").textContent = "Admin Panel";
+            }
+        }
+
+        // Get client IP address
+        async function getClientIP() {
+            try {
+                const response = await fetch('https://api.ipify.org?format=json');
+                if (!response.ok) throw new Error('Could not get IP');
+                const data = await response.json();
+                return data.ip || "Unknown IP";
+            } catch (error) {
+                console.error("Could not get IP address:", error);
+                return "Unknown IP";
+            }
+        }
+
+        // Save record to JSONBin with IP check
+        async function saveRecord(username, ip) {
+            try {
+                // Get existing records
+                const records = await fetchRecords();
+
+                // Check if IP already exists
+                const existingIP = records.find(record => record.ip === ip);
+                if (existingIP) {
+                    return {
+                        success: false,
+                        message: `This IP address (${ip}) is already registered by ${existingIP.username}!`
+                    };
+                }
+
+                // Check if username already exists
+                const existingUser = records.find(record => record.username === username);
+                if (existingUser) {
+                    return {
+                        success: false,
+                        message: "This username is already registered!"
+                    };
+                }
+
+                // Create new record
+                const newRecord = {
+                    username,
+                    ip,
+                    timestamp: new Date().toISOString()
+                };
+
+                // Add to records
+                records.push(newRecord);
+
+                // Update JSONBin
+                const updateSuccess = await updateJSONBin(records);
+
+                if (updateSuccess) {
+                    currentRecords = records;
+                    return { success: true };
+                } else {
+                    return { success: false, message: "Could not create record!" };
+                }
+            } catch (error) {
+                console.error("Record creation error:", error);
+                return { success: false, message: "An error occurred!" };
+            }
+        }
+
+        // Fetch records from JSONBin
+        async function fetchRecords() {
+            try {
+                const response = await fetch(JSON_BIN_URL, {
+                    headers: {
+                        'X-Master-Key': API_KEY,
+                        'X-Bin-Meta': false
+                    }
+                });
+
+                if (!response.ok) throw new Error('Could not fetch data');
+
+                const data = await response.json();
+                return Array.isArray(data) ? data : [];
+            } catch (error) {
+                console.error("Could not fetch records:", error);
+                return [];
+            }
+        }
+
+        // Update JSONBin
+        async function updateJSONBin(records) {
+            try {
+                const response = await fetch(JSON_BIN_URL, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': API_KEY
+                    },
+                    body: JSON.stringify(records)
+                });
+
+                return response.ok;
+            } catch (error) {
+                console.error("JSONBin update error:", error);
+                return false;
+            }
+        }
+
+        // Normal user login
+        document.getElementById("user-form").addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const username = document.getElementById("username").value.trim();
+
+            if (!username) {
+                statusDiv.textContent = "Please enter a username!";
+                statusDiv.className = "status-message error";
+                return;
+            }
+
+            statusDiv.textContent = "Logging in...";
+            statusDiv.className = "status-message";
+
+            try {
+                // Get client IP
+                const clientIP = await getClientIP();
+
+                // Save record with IP check
+                const { success, message } = await saveRecord(username, clientIP);
+
+                if (success) {
+                    sessionStorage.setItem("username", username);
+                    sessionStorage.setItem("userType", "normal");
+                    showRecordsPage();
+                    loadRecords();
+                } else {
+                    statusDiv.textContent = message || "Could not create record!";
+                    statusDiv.className = "status-message error";
+                }
+            } catch (error) {
+                statusDiv.textContent = "An error occurred, please try again!";
+                statusDiv.className = "status-message error";
+                console.error("Login error:", error);
+            }
+        });
+
+        // Admin modal functions
+        adminBtn.onclick = function () {
+            modal.style.display = "block";
+            document.getElementById("admin-password").focus();
+        };
+
+        closeBtn.onclick = function () {
+            modal.style.display = "none";
+            adminStatusDiv.textContent = "";
+            adminStatusDiv.className = "status-message";
+        };
+
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+                adminStatusDiv.textContent = "";
+                adminStatusDiv.className = "status-message";
+            }
+        };
+
+        // Admin login
+        document.getElementById("admin-form").addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const password = document.getElementById("admin-password").value;
+
+            adminStatusDiv.textContent = "Logging in...";
+            adminStatusDiv.className = "status-message";
+
+            try {
+                if (password === ADMIN_PASSWORD) {
+                    sessionStorage.setItem("userType", "admin");
+                    modal.style.display = "none";
+                    showRecordsPage();
+                    loadRecords();
+                } else {
+                    adminStatusDiv.textContent = "Wrong password!";
+                    adminStatusDiv.className = "status-message error";
+                }
+            } catch (error) {
+                adminStatusDiv.textContent = "Error during login!";
+                adminStatusDiv.className = "status-message error";
+                console.error("Admin login error:", error);
+            }
+        });
+
+        // Load records
+        async function loadRecords() {
+            ipEntries.innerHTML = '<div class="loading">Loading...</div>';
+
+            try {
+                const records = await fetchRecords();
+                currentRecords = records;
+
+                const userType = sessionStorage.getItem("userType");
+                const username = sessionStorage.getItem("username");
+
+                // Filter records for normal users
+                let recordsToShow = [...records];
+                if (userType === "normal") {
+                    recordsToShow = records.filter(record => record.username === username);
+                }
+
+                displayRecords(recordsToShow);
+            } catch (error) {
+                console.error("Error loading records:", error);
+                ipEntries.innerHTML = '<div class="error">Error loading records!</div>';
+            }
+        }
+
+        // Display records
+        function displayRecords(records) {
+            if (records.length === 0) {
+                ipEntries.innerHTML = '<div class="no-records">No records found</div>';
+                return;
+            }
+
+            let html = "";
+            records.forEach(record => {
+                const date = new Date(record.timestamp);
+                const formattedDate = date.toLocaleDateString('en-US', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                html += `
+                                    <div class="ip-entry">
+                                        <div class="ip-info">
+                                            <strong>${record.username}</strong>
+                                            <div class="timestamp">${formattedDate}</div>
+                                        </div>
+                                        <div class="ip-actions">
+                                            <div>${record.ip}</div>
+                                            ${sessionStorage.getItem("userType") === "admin" ?
+                        `<button class="delete-btn" data-ip="${record.ip}" data-username="${record.username}">Delete</button>` : ''}
+                                        </div>
+                                    </div>
+                                    `;
+            });
+
+            ipEntries.innerHTML = html;
+
+            // Add delete event listeners for admin
+            if (sessionStorage.getItem("userType") === "admin") {
+                document.querySelectorAll('.delete-btn').forEach(button => {
+                    button.addEventListener('click', async function () {
+                        const ip = this.getAttribute('data-ip');
+                        const username = this.getAttribute('data-username');
+                        await deleteRecord(ip, username);
+                    });
+                });
+            }
+        }
+
+        // Delete record
+        async function deleteRecord(ip, username) {
+            if (sessionStorage.getItem("userType") !== "admin") return;
+
+            const confirmation = confirm(`Are you sure you want to delete ${username}'s record? (IP: ${ip})`);
+            if (!confirmation) return;
+
+            try {
+                const records = await fetchRecords();
+                const updatedRecords = records.filter(record => record.ip !== ip);
+
+                const updateSuccess = await updateJSONBin(updatedRecords);
+
+                if (updateSuccess) {
+                    currentRecords = updatedRecords;
+                    loadRecords();
+                } else {
+                    alert("Could not delete record, please try again!");
+                }
+            } catch (error) {
+                console.error("Delete error:", error);
+                alert("An error occurred, please try again!");
+            }
+        }
+
+        // Logout
+        function logout() {
+            sessionStorage.clear();
+            recordsContainer.style.display = "none";
+            loginContainer.style.display = "block";
+            document.getElementById("username").value = "";
+            document.getElementById("admin-password").value = "";
+            statusDiv.textContent = "";
+            statusDiv.className = "status-message";
+        }
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initApp);</script>
+    <script>
+    function changeBgColor(color) {
+            document.body.style.backgroundColor = color;
+        }</script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+</body>
+</html>
